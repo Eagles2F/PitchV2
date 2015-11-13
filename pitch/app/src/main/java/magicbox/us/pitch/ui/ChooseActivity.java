@@ -1,10 +1,12 @@
-package magicbox.us.pitch;
+package magicbox.us.pitch.ui;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import magicbox.us.pitch.R;
 
 public class ChooseActivity extends AppCompatActivity {
     public static Intent createIntent(Context context) {

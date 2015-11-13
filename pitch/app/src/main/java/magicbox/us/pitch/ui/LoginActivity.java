@@ -1,4 +1,4 @@
-package magicbox.us.pitch;
+package magicbox.us.pitch.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -31,6 +31,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import magicbox.us.pitch.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
 

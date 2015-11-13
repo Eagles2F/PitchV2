@@ -1,6 +1,5 @@
-package magicbox.us.pitch;
+package magicbox.us.pitch.ui;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +9,8 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+
+import magicbox.us.pitch.R;
 
 /**
  * An activity representing a single pitch detail screen. This

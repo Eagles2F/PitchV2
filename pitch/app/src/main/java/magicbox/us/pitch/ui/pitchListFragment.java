@@ -1,4 +1,4 @@
-package magicbox.us.pitch;
+package magicbox.us.pitch.ui;
 
 import android.app.Activity;
 import android.os.Bundle;

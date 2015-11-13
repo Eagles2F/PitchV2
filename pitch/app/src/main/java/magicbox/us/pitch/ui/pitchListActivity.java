@@ -1,4 +1,4 @@
-package magicbox.us.pitch;
+package magicbox.us.pitch.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+
+import magicbox.us.pitch.R;
 
 
 /**

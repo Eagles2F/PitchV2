@@ -3,7 +3,7 @@
     android:layout_height="match_parent" android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp" android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal" android:orientation="horizontal"
-    android:showDividers="middle" tools:context="magicbox.us.pitch.pitchListActivity">
+    android:showDividers="middle" tools:context="magicbox.us.pitch.ui.pitchListActivity">
 
     <!--
     This layout is a two-pane layout for the pitches
@@ -11,7 +11,7 @@
     
     -->
 
-    <fragment android:id="@+id/pitch_list" android:name="magicbox.us.pitch.pitchListFragment"
+    <fragment android:id="@+id/pitch_list" android:name="magicbox.us.pitch.ui.pitchListFragment"
         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
         tools:layout="@android:layout/list_content" />
 

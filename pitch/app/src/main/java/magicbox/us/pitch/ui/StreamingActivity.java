@@ -1,4 +1,4 @@
-package magicbox.us.pitch;
+package magicbox.us.pitch.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+
+import magicbox.us.pitch.R;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

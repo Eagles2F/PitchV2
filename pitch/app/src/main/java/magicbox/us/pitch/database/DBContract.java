@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
  * Created by yangwu on 11/13/15.
  */
 public final class DBContract {
-    
+
     public DBContract() {}
 
     /* Inner class that defines the table contents */
