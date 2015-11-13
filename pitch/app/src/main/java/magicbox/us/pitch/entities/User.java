@@ -9,6 +9,7 @@ import magicbox.us.pitch.third_party.LinkedInAPI;
  * Created by yangwu on 11/13/15.
  */
 public class User {
+
     private String mId;
     private String mName;
     private String mEmail;
@@ -16,9 +17,7 @@ public class User {
     private String mPictureUrl;
     private boolean mPitchable;
 
-    private User() {
-
-    }
+    private User() {}
 
     public User(String id, String name, String email, String headline, String url) {
         mId = id;

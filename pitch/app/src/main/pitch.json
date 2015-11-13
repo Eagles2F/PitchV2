@@ -1,0 +1,31 @@
+{
+  "_comment": "pwd: pitchv2",
+  "users": [
+    {
+      "mId": "abcd123",
+      "mName": "Allen Bob",
+      "mEmail": "pitch@gmail.com",
+      "mHeadline": "Hello World",
+      "mPictureUrl": "",
+      "mPitchable": true
+    },
+    {
+      "mId": "abcd123",
+      "mName": "Allen Bob",
+      "mEmail": "pitch@gmail.com",
+      "mHeadline": "Hello World",
+      "mPictureUrl": "",
+      "mPitchable": false
+    }
+  ],
+  "chat": [
+    {
+      "message": "Hello",
+      "author": "0"
+    },
+    {
+      "message": "Ping",
+      "author": "1"
+    }
+  ]
+}
