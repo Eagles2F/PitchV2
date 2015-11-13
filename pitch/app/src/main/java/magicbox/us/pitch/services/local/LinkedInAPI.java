@@ -1,4 +1,4 @@
-package magicbox.us.pitch.third_party;
+package magicbox.us.pitch.services.local;
 
 /**
  * Created by yangwu on 11/13/15.

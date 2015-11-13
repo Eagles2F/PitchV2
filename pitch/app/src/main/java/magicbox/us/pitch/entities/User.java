@@ -3,7 +3,7 @@ package magicbox.us.pitch.entities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import magicbox.us.pitch.third_party.LinkedInAPI;
+import magicbox.us.pitch.services.local.LinkedInAPI;
 
 /**
  * Created by yangwu on 11/13/15.
