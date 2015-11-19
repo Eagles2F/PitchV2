@@ -14,6 +14,7 @@ public final class DBContract {
         public static final String TABLE_NAME = "user";
         public static final String COLUMN_NAME_USER_ID = "uid";
         public static final String COLUMN_NAME_USER_NAME = "name";
+        public static final String COLUMN_NAME_PASSWORD = "password";
         public static final String COLUMN_NAME_EMAIL = "email";
         public static final String COLUMN_NAME_HEADLINE = "headline";
         public static final String COLUMN_NAME_PICTURE = "picture";

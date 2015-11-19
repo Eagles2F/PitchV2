@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import magicbox.us.pitch.R;
+import magicbox.us.pitch.entities.User;
+import magicbox.us.pitch.entities.UserBuilder;
+import magicbox.us.pitch.util.DBEntry;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -40,6 +44,8 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+    private static final String TAG = "LOGIN";
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -57,6 +63,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+
+    /**
+     * Database connector & executor
+     */
+    private DBEntry dbEntry = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -92,16 +103,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button LinkedInSignInButton = (Button) findViewById(R.id.linkedIn_login_btn);
-        LinkedInSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LinkedInAuth();
-            }
-        });
-
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        dbEntry = new DBEntry(this);
     }
 
     private void populateAutoComplete() {
@@ -198,10 +203,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
-    }
-
-    private void LinkedInAuth() {
-
     }
 
     private boolean isEmailValid(String email) {
@@ -321,23 +322,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            User user = new UserBuilder()
+                    .email(mEmail)
+                    .password(mPassword)
+                    .buildUser();
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+            dbEntry.register(user);
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
+            Log.d(TAG, "Created a user");
             return true;
         }
 

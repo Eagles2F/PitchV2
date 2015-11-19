@@ -10,83 +10,80 @@ import magicbox.us.pitch.services.remote.LinkedInAPI;
  */
 public class User {
 
-    private String uId;
     private String mName;
+    private String mPassword;
     private String mEmail;
     private String mHeadline;
     private String mPictureUrl;
     private boolean mPitchable;
 
-    private User() {}
+    User() {}
 
-    public User(String id, String name, String email, String headline, String url) {
-        uId = id;
+    User(String name, String pwd, String email, String headline, String url, boolean pitchale) {
         mName = name;
+        mPassword = pwd;
         mEmail = email;
         mHeadline = headline;
         mPictureUrl = url;
-        mPitchable = true;
+        mPitchable = pitchale;
     }
 
     public String getmName() {
         return mName;
     }
 
-    public void setmName(String mName) {
-        this.mName = mName;
-    }
-
-    public String getuId() {
-        return uId;
-    }
-
-    public void setuId(String uId) {
-        this.uId = uId;
-    }
-
     public String getmEmail() {
         return mEmail;
     }
 
-    public void setmEmail(String mEmail) {
-        this.mEmail = mEmail;
+    public void email(String _email) {
+        this.mEmail = _email;
     }
 
     public String getmHeadline() {
         return mHeadline;
     }
 
-    public void setmHeadline(String mHeadline) {
-        this.mHeadline = mHeadline;
+    public void headline(String _headline) {
+        this.mHeadline = _headline;
     }
 
     public String getmPictureUrl() {
         return mPictureUrl;
     }
 
-    public void setmPictureUrl(String mPictureUrl) {
-        this.mPictureUrl = mPictureUrl;
+    public void pictureUrl(String _pictureUrl) {
+        this.mPictureUrl = _pictureUrl;
     }
 
     public boolean ismPitchable() {
         return mPitchable;
     }
 
-    public void setmPitchable(boolean mPitchable) {
-        this.mPitchable = mPitchable;
+    public void pitchable(boolean _pitchable) {
+        this.mPitchable = _pitchable;
     }
 
-    public static User parse(JSONObject jsonObject) {
-        // TODO: parse user by 3rd party
-        try {
-            return new User(jsonObject.getString(LinkedInAPI.JSON_ID),
-                    jsonObject.getString(LinkedInAPI.JSON_NAME),
-                    jsonObject.getString(LinkedInAPI.JSON_EMAIL),
-                    jsonObject.getString(LinkedInAPI.JSON_HEADLINE),
-                    jsonObject.getString(LinkedInAPI.JSON_PICTUREURL));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public void password(String _password) {
+        this.mPassword = _password;
     }
+
+    public String getmPassword() {
+        return mPassword;
+    }
+
+
+//    public static User parse(JSONObject jsonObject) {
+//        // TODO: parse user by 3rd party
+//        try {
+//            return new User(jsonObject.getString(LinkedInAPI.JSON_ID),
+//                    jsonObject.getString(LinkedInAPI.JSON_NAME),
+//                    jsonObject.getString(LinkedInAPI.JSON_EMAIL),
+//                    jsonObject.getString(LinkedInAPI.JSON_HEADLINE),
+//                    jsonObject.getString(LinkedInAPI.JSON_PICTUREURL));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 }
