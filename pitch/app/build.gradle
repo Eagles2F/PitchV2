@@ -10,13 +10,27 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+//        ndk {
+//            stl "gnustl_static"
+//            cFlags "-std=c99"
+//            ldLibs "log"
+//        }
     }
+
     buildTypes {
+        debug {
+            debuggable true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+//    sourceSets.main {
+//        jniLibs.srcDir 'libs'
+//        jni.srcDirs = [] // disable auto ndk-build call
+//    }
 }
 
 dependencies {
