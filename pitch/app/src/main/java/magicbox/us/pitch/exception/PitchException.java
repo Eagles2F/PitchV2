@@ -5,9 +5,9 @@ import android.content.Context;
 import android.util.Log;
 
 /**
- * Created by yangwu on 11/13/15.
  *
  * Log the exception and pop up an alert
+ *
  */
 public class PitchException {
     private static final String TAG = "PITCH DEBUG";

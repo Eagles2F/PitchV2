@@ -3,14 +3,14 @@ package magicbox.us.pitch.entities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import magicbox.us.pitch.services.local.LinkedInAPI;
+import magicbox.us.pitch.services.remote.LinkedInAPI;
 
 /**
  * Created by yangwu on 11/13/15.
  */
 public class User {
 
-    private String mId;
+    private String uId;
     private String mName;
     private String mEmail;
     private String mHeadline;
@@ -20,7 +20,7 @@ public class User {
     private User() {}
 
     public User(String id, String name, String email, String headline, String url) {
-        mId = id;
+        uId = id;
         mName = name;
         mEmail = email;
         mHeadline = headline;
@@ -36,14 +36,13 @@ public class User {
         this.mName = mName;
     }
 
-    public String getmId() {
-        return mId;
+    public String getuId() {
+        return uId;
     }
 
-    public void setmId(String mId) {
-        this.mId = mId;
+    public void setuId(String uId) {
+        this.uId = uId;
     }
-
 
     public String getmEmail() {
         return mEmail;

@@ -39,6 +39,16 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <ImageButton android:id="@+id/linkedIn_login_btn"
+                android:layout_height="30dp"
+                android:layout_width="30dp"
+                android:src="@drawable/linkedin_logo"
+                android:scaleType="fitCenter"
+                android:paddingLeft="-15dp"
+                android:paddingRight="-15dp"
+                android:paddingTop="-15dp"
+                android:paddingBottom="-15dp"/>
+
             <Button android:id="@+id/email_sign_in_button" style="?android:textAppearanceSmall"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginTop="16dp" android:text="@string/action_sign_in"

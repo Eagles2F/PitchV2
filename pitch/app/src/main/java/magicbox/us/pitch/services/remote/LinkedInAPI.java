@@ -1,8 +1,5 @@
-package magicbox.us.pitch.services.local;
+package magicbox.us.pitch.services.remote;
 
-/**
- * Created by yangwu on 11/13/15.
- */
 public class LinkedInAPI {
     public static final String JSON_ID = "id";
     public static final String JSON_NAME = "formattedName";

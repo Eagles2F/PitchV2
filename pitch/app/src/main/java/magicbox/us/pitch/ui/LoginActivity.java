@@ -92,6 +92,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+        Button LinkedInSignInButton = (Button) findViewById(R.id.linkedIn_login_btn);
+        LinkedInSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LinkedInAuth();
+            }
+        });
+
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
@@ -190,6 +198,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
+    }
+
+    private void LinkedInAuth() {
+
     }
 
     private boolean isEmailValid(String email) {

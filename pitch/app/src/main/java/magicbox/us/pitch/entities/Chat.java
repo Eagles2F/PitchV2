@@ -6,13 +6,15 @@ package magicbox.us.pitch.entities;
 public class Chat {
     private String message;
     private String author;
+    private String pid;
 
     // Required default constructor for Firebase object mapping
     @SuppressWarnings("unused")
     private Chat() {
     }
 
-    public Chat(String message, String author) {
+    public Chat(String pid, String message, String author) {
+        this.pid = pid;
         this.message = message;
         this.author = author;
     }
@@ -23,5 +25,9 @@ public class Chat {
 
     public String getAuthor() {
         return author;
+    }
+
+    public String getPid() {
+        return pid;
     }
 }
