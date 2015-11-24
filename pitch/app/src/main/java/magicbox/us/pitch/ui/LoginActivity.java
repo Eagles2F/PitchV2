@@ -30,13 +30,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.squareup.okhttp.ResponseBody;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import magicbox.us.pitch.R;
-import magicbox.us.pitch.entities.User;
-import magicbox.us.pitch.entities.UserBuilder;
+import magicbox.us.pitch.network.api.UserRegisterService;
+import magicbox.us.pitch.network.model.UserRegisterBody;
+import magicbox.us.pitch.network.model.UserRegisterResponse;
+import magicbox.us.pitch.util.APIEntrypoint;
 import magicbox.us.pitch.util.DBEntry;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -53,27 +63,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
 
-    /**
-     * Database connector & executor
-     */
-    private DBEntry dbEntry = null;
-
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mSkillsView;
     private View mProgressView;
     private View mLoginFormView;
+    private Button mLoginButton;
+    private Button mRegisterButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +96,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        mSkillsView = (EditText) findViewById(R.id.skills);
+
+        mRegisterButton = (Button) findViewById(R.id.email_register_button);
+        mRegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attemptRegister();
+            }
+        });
+
+        mLoginButton = (Button) findViewById(R.id.email_sign_in_button);
+        mLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
@@ -105,8 +116,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-        dbEntry = new DBEntry(this);
     }
 
     private void populateAutoComplete() {
@@ -199,10 +208,137 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            login(email, password);
         }
+    }
+
+    private void attemptRegister() {
+        if (mAuthTask != null) {
+            return;
+        }
+
+        // Reset errors.
+        mEmailView.setError(null);
+        mPasswordView.setError(null);
+        mSkillsView.setError(null);
+
+        // Store values at the time of the login attempt.
+        String email = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
+        String skills = mSkillsView.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
+            cancel = true;
+        } else if (!isEmailValid(email)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
+            cancel = true;
+        }
+
+        //check for valid skills
+        if (TextUtils.isEmpty(skills)) {
+            mSkillsView.setError(getString(R.string.error_field_required));
+            focusView = mSkillsView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            register(email, password, skills);
+        }
+    }
+
+
+    private void register(String email, String password, String skills) {
+        showProgress(true);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIEntrypoint.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserRegisterService service = retrofit.create(UserRegisterService.class);
+
+        UserRegisterBody body = new UserRegisterBody(email, password, skills);
+
+        Call<UserRegisterResponse> call = service.register(body);
+        call.enqueue(new Callback<UserRegisterResponse>() {
+            @Override
+            public void onResponse(Response<UserRegisterResponse> response, Retrofit retrofit) {
+                showProgress(false);
+                if (response.isSuccess()) {
+                    UserRegisterResponse tokenRes = response.body();
+                    Log.i("evan", tokenRes.toString());
+                    if (tokenRes.getSuccess().equals("True")) {
+                        startActivity(ChooseActivity.createIntent(LoginActivity.this));
+                        finish();
+                    } else {
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                        mPasswordView.requestFocus();
+                    }
+                } else {
+                    int statusCode = response.code();
+
+                    ResponseBody errorBody = response.errorBody();
+                    Log.d("evan", "error for token request:" + statusCode + " " + errorBody);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
+    }
+
+    private void login(String email, String password) {
+        showProgress(true);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIEntrypoint.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserRegisterService service = retrofit.create(UserRegisterService.class);
+        Call<UserRegisterResponse> call = service.login(email, password);
+        call.enqueue(new Callback<UserRegisterResponse>() {
+            @Override
+            public void onResponse(Response<UserRegisterResponse> response, Retrofit retrofit) {
+                showProgress(false);
+                if (response.isSuccess()) {
+                    UserRegisterResponse tokenRes = response.body();
+                    if (tokenRes.getSuccess().equals("True")) {
+                        startActivity(ChooseActivity.createIntent(LoginActivity.this));
+                        finish();
+                    } else {
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                        mPasswordView.requestFocus();
+                    }
+                } else {
+                    int statusCode = response.code();
+
+                    ResponseBody errorBody = response.errorBody();
+                    Log.d("evan", "error for token request:" + statusCode + " " + errorBody);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
     }
 
     private boolean isEmailValid(String email) {
@@ -212,7 +348,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 2;
     }
 
     /**
@@ -311,23 +447,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String mName;
         private final String mPassword;
 
         UserLoginTask(String email, String password) {
-            mEmail = email;
+            mName = email;
             mPassword = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            User user = new UserBuilder()
-                    .email(mEmail)
-                    .password(mPassword)
-                    .buildUser();
-
-            dbEntry.register(user);
 
             Log.d(TAG, "Created a user");
             return true;

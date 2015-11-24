@@ -8,6 +8,6 @@ public class LinkedInAPI {
     public static final String JSON_PICTUREURL = "pictureUrl";
 
     public static final String host = "api.linkedin.com";
-    public static final String basicUserInfoUrl = "https://" + host + "/v1/people/~:(id,formatted-name,email-address,headline,picture-url)";
+    public static final String basicUserInfoUrl = "https://" + host + "/v1/people/~:(id,formatted-name,email-address,headline,picture-URL)";
     public static final String shareUrl = "https://" + host + "/v1/people/~/shares";
 }

@@ -23,5 +23,13 @@
         android:id="@+id/button"
         android:layout_alignBottom="@+id/datePicker"
         android:layout_centerHorizontal="true" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Upload Video"
+        android:id="@+id/upload"
+        android:layout_alignBottom="@+id/datePicker"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
