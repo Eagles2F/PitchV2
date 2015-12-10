@@ -1,14 +1,19 @@
 package magicbox.us.pitch.ui;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 import magicbox.us.pitch.R;
 
@@ -17,6 +22,7 @@ import magicbox.us.pitch.R;
  * status bar and navigation/system bar) with user interaction.
  */
 public class StreamingActivity extends AppCompatActivity {
+    private static final String VIDEO_URL = "https://s3.amazonaws.com/magicbox.pitch/test.mp4";
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -38,6 +44,7 @@ public class StreamingActivity extends AppCompatActivity {
     private View mContentView;
     private View mControlsView;
     private boolean mVisible;
+    private VideoView mVideo;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, StreamingActivity.class);
@@ -66,6 +73,19 @@ public class StreamingActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+        mVideo = (VideoView) findViewById(R.id.videoView);
+
+        initVideoView(this, mVideo);
+
+        mVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(final MediaPlayer mp) {
+                finish();
+            }
+        });
+
+        mVideo.start();
     }
 
     @Override
@@ -172,5 +192,42 @@ public class StreamingActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    private void initVideoView(Context context, final VideoView videoView) {
+
+        if (videoView == null) {
+            return;
+        }
+
+        // Create a progressbar
+        final ProgressDialog pDialog = new ProgressDialog(StreamingActivity.this);
+        // Set progressbar title
+        pDialog.setTitle("Pitch Streaming");
+        // Set progressbar message
+        pDialog.setMessage("Buffering...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        // Show progressbar
+        pDialog.show();
+
+        // Start the MediaController
+        final MediaController mediacontroller = new MediaController(
+                StreamingActivity.this);
+        mediacontroller.setAnchorView(videoView);
+
+        // Get the URL from String VideoURL
+        final Uri video = Uri.parse(VIDEO_URL);
+        videoView.setMediaController(mediacontroller);
+        videoView.setVideoURI(video);
+
+        videoView.requestFocus();
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            // Close the progress bar and play the video
+            public void onPrepared(MediaPlayer mp) {
+                pDialog.dismiss();
+                videoView.start();
+            }
+        });
     }
 }

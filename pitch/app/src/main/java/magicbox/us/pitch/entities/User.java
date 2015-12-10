@@ -1,59 +1,19 @@
 package magicbox.us.pitch.entities;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import magicbox.us.pitch.services.remote.LinkedInAPI;
-
 /**
  * Created by yangwu on 11/13/15.
  */
 public class User {
-
-    private String mName;
-    private String mPassword;
     private String mEmail;
-    private String mHeadline;
-    private String mPictureUrl;
     private boolean mPitchable;
+    private String mSkills;
 
-    User() {}
+    public User() {}
 
-    User(String name, String pwd, String email, String headline, String url, boolean pitchale) {
-        mName = name;
-        mPassword = pwd;
+    public User(String email, boolean pitchable, String skills) {
         mEmail = email;
-        mHeadline = headline;
-        mPictureUrl = url;
-        mPitchable = pitchale;
-    }
-
-    public String getmName() {
-        return mName;
-    }
-
-    public String getmEmail() {
-        return mEmail;
-    }
-
-    public void email(String _email) {
-        this.mEmail = _email;
-    }
-
-    public String getmHeadline() {
-        return mHeadline;
-    }
-
-    public void headline(String _headline) {
-        this.mHeadline = _headline;
-    }
-
-    public String getmPictureUrl() {
-        return mPictureUrl;
-    }
-
-    public void pictureUrl(String _pictureUrl) {
-        this.mPictureUrl = _pictureUrl;
+        mPitchable = pitchable;
+        mSkills = skills;
     }
 
     public boolean ismPitchable() {
@@ -64,26 +24,19 @@ public class User {
         this.mPitchable = _pitchable;
     }
 
-    public void password(String _password) {
-        this.mPassword = _password;
+    public String getmSkills() {
+        return mSkills;
     }
 
-    public String getmPassword() {
-        return mPassword;
+    public void setmSkills(String mSkills) {
+        this.mSkills = mSkills;
     }
 
+    public String getmEmail() {
+        return mEmail;
+    }
 
-//    public static User parse(JSONObject jsonObject) {
-//        // TODO: parse user by 3rd party
-//        try {
-//            return new User(jsonObject.getString(LinkedInAPI.JSON_ID),
-//                    jsonObject.getString(LinkedInAPI.JSON_NAME),
-//                    jsonObject.getString(LinkedInAPI.JSON_EMAIL),
-//                    jsonObject.getString(LinkedInAPI.JSON_HEADLINE),
-//                    jsonObject.getString(LinkedInAPI.JSON_PICTUREURL));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    public void setmEmail(String mEmail) {
+        this.mEmail = mEmail;
+    }
 }

@@ -9,8 +9,10 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import magicbox.us.pitch.R;
+import magicbox.us.pitch.util.Utils;
 
 /**
  * An activity representing a single pitch detail screen. This
@@ -22,11 +24,14 @@ import magicbox.us.pitch.R;
  * more than a {@link pitchDetailFragment}.
  */
 public class pitchDetailActivity extends AppCompatActivity {
+    private FloatingActionButton likeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pitch_detail);
+        ((ImageView) findViewById(R.id.image)).setImageResource(Utils.getDrawableId());
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
@@ -39,6 +44,8 @@ public class pitchDetailActivity extends AppCompatActivity {
                 startActivity(StreamingActivity.createIntent(pitchDetailActivity.this));
             }
         });
+
+        likeButton = (FloatingActionButton) findViewById(R.id.like_button);
 
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,14 +63,18 @@ public class pitchDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(pitchDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(pitchDetailFragment.ARG_ITEM_ID));
+            arguments.putInt(pitchDetailFragment.ARG_ITEM_ID,
+                    getIntent().getIntExtra(pitchDetailFragment.ARG_ITEM_ID, 0));
             pitchDetailFragment fragment = new pitchDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.pitch_detail_container, fragment)
                     .commit();
         }
+    }
+
+    public FloatingActionButton getLikeButton() {
+        return likeButton;
     }
 
     @Override

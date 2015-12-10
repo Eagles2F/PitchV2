@@ -33,15 +33,15 @@ import android.widget.TextView;
 import com.squareup.okhttp.ResponseBody;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import magicbox.us.pitch.R;
+import magicbox.us.pitch.entities.User;
 import magicbox.us.pitch.network.api.UserRegisterService;
 import magicbox.us.pitch.network.model.UserRegisterBody;
 import magicbox.us.pitch.network.model.UserRegisterResponse;
 import magicbox.us.pitch.util.APIEntrypoint;
-import magicbox.us.pitch.util.DBEntry;
+import magicbox.us.pitch.util.Session;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -61,11 +61,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -168,10 +163,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -213,10 +204,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void attemptRegister() {
-        if (mAuthTask != null) {
-            return;
-        }
-
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -267,7 +254,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
-    private void register(String email, String password, String skills) {
+    private void register(final String email,final  String password, final String skills) {
         showProgress(true);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(APIEntrypoint.URL)
@@ -285,7 +272,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (response.isSuccess()) {
                     UserRegisterResponse tokenRes = response.body();
                     Log.i("evan", tokenRes.toString());
-                    if (tokenRes.getSuccess().equals("True")) {
+                    if (tokenRes.getSuccess()) {
+                        Session.getInstance().setmCurrentUser(new User(email, true, skills));
                         startActivity(ChooseActivity.createIntent(LoginActivity.this));
                         finish();
                     } else {
@@ -306,7 +294,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
     }
 
-    private void login(String email, String password) {
+    private void login(final String email, String password) {
         showProgress(true);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(APIEntrypoint.URL)
@@ -320,7 +308,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 showProgress(false);
                 if (response.isSuccess()) {
                     UserRegisterResponse tokenRes = response.body();
-                    if (tokenRes.getSuccess().equals("True")) {
+                    if (tokenRes.getSuccess()) {
+                        Session.getInstance().setmCurrentUser(new User(email, true, "java,web,android"));
                         startActivity(ChooseActivity.createIntent(LoginActivity.this));
                         finish();
                     } else {
@@ -439,49 +428,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mName;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mName = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            Log.d(TAG, "Created a user");
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                startActivity(ChooseActivity.createIntent(LoginActivity.this));
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
     }
 }
 

@@ -3,11 +3,11 @@ package magicbox.us.pitch.network.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import magicbox.us.pitch.util.Key;
-
-public class UserRegisterResponse {
-
-    @SerializedName(Key.SUCCESS)
+/**
+ * Created by evan on 12/7/15.
+ */
+public class PitchCreateResponse {
+    @SerializedName("success")
     @Expose
     private boolean success;
 

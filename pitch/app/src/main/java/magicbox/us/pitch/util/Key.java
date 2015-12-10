@@ -6,5 +6,10 @@ package magicbox.us.pitch.util;
 public interface Key {
     String EMAIL = "email";
     String PASSWORD = "password";
-    String SUCCESS = "Success";
+    String SUCCESS = "success";
+    String VIDEO = "video";
+    String DESCRIPTION = "description";
+    String TAG = "tag";
+    String TITLE = "title";
+    String DATE = "date";
 }

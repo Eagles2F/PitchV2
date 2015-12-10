@@ -18,6 +18,10 @@
     <string name="title_pitch_detail">pitch Detail</string>
     <string name="title_activity_schedule">Schedule</string>
 
+    <string name="title">title</string>
+    <string name="description">description</string>
+    <string name="tag">tag</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

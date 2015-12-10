@@ -3,11 +3,19 @@ package magicbox.us.pitch.ui;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import magicbox.us.pitch.dummy.DummyContent;
+import magicbox.us.pitch.network.api.PitchService;
+import magicbox.us.pitch.network.model.PitchListResponse;
+import magicbox.us.pitch.util.APIEntrypoint;
+import magicbox.us.pitch.util.Session;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * A list fragment representing a list of pitches. This fragment
@@ -19,7 +27,6 @@ import magicbox.us.pitch.dummy.DummyContent;
  * interface.
  */
 public class pitchListFragment extends ListFragment {
-
     /**
      * The serialization (saved instance state) Bundle key representing the
      * activated item position. Only used on tablets.
@@ -37,6 +44,8 @@ public class pitchListFragment extends ListFragment {
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
+    private PitchListAdapter mAdapter;
+
     /**
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of item
@@ -46,7 +55,7 @@ public class pitchListFragment extends ListFragment {
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(String id);
+        public void onItemSelected(int id);
     }
 
     /**
@@ -55,7 +64,7 @@ public class pitchListFragment extends ListFragment {
      */
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(String id) {
+        public void onItemSelected(int id) {
         }
     };
 
@@ -70,12 +79,8 @@ public class pitchListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO: replace with a real list adapter.
-        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(
-                getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                DummyContent.ITEMS));
+        mAdapter = new PitchListAdapter(getContext());
+        setListAdapter(mAdapter);
     }
 
     @Override
@@ -87,6 +92,31 @@ public class pitchListFragment extends ListFragment {
                 && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIEntrypoint.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PitchService service = retrofit.create(PitchService.class);
+        Call<PitchListResponse> call = service.listAll();
+        call.enqueue(new Callback<PitchListResponse>() {
+            @Override
+            public void onResponse(Response<PitchListResponse> response, Retrofit retrofit) {
+                if (response.isSuccess()) {
+                    mAdapter.setData(response.body().getPitchList());
+                    Session.getInstance().setmCurrentPitchList(response.body().getPitchList());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.i("evan", t.toString());
+            }
+        });
     }
 
     @Override
@@ -115,7 +145,7 @@ public class pitchListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
+        mCallbacks.onItemSelected(position);
     }
 
     @Override

@@ -1,40 +1,22 @@
 package magicbox.us.pitch.entities;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class Pitch {
-    private String mId; // foreign key for User
+    private int pid;
     private String date;
     private String title;
     private String description;
-
-    private Date calDate;
-
-    SimpleDateFormat iso8601Format =
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private String tag;
+    private int like;
+    private String email;
 
     private Pitch() {}
 
-    public Pitch(String mId, String date, String title, String description) {
-        this.mId = mId;
-        this.date = date;
-        this.title = title;
-        this.description = description;
-
-        try {
-            this.calDate = iso8601Format.parse(date);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public int getPid() {
+        return pid;
     }
 
-    public String getmId() {
-        return mId;
-    }
-
-    public void setmId(String mId) {
-        this.mId = mId;
+    public void setPid(int pid) {
+        this.pid = pid;
     }
 
     public String getDate() {
@@ -61,11 +43,27 @@ public class Pitch {
         this.description = description;
     }
 
-    public Date getCalDate() {
-        return calDate;
+    public String getTag() {
+        return tag;
     }
 
-    public void setCalDate(Date calDate) {
-        this.calDate = calDate;
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public int getLike() {
+        return like;
+    }
+
+    public void setLike(int like) {
+        this.like = like;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
